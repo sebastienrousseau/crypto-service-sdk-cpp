@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+# The toolchain for local work, matching CI where mise has the tool:
+# clang-format and clang-tidy 18 (the versions CI runs), the complexity
+# meter, Python for the gate scripts, and Node 24 with pnpm for building
+# the pinned crypto-server (make regression) and markdownlint. The C++
+# compilers, CMake, libcurl, Doxygen and the sanitizer runtimes come
+# from the system package manager (DEVELOPMENT.md).
+[tools]
+python = "3.12"
+node = "24"
+pnpm = "11.9.0"
+"pipx:clang-format" = "18.1.8"
+"pipx:clang-tidy" = "18.1.8"
+"cargo:rust-code-analysis-cli" = "0.0.25"
+"pipx:codespell" = "2.4.1"
+"pipx:reuse" = "6.2.0"

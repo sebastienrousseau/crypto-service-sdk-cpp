@@ -21,7 +21,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 MAKE=${MAKE:-make}
-ref=$(cat ci/server.ref)
+ref=$(tr -d '[:space:]' < ci/server.ref)
+if ! [[ "$ref" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "regression: ci/server.ref must hold a full 40-character commit SHA" >&2
+  exit 1
+fi
 server_pid=""
 log=$(mktemp "${TMPDIR:-/tmp}/crypto-service-regression.XXXXXX")
 

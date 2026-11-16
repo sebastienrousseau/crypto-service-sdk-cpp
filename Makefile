@@ -173,7 +173,7 @@ tsan:
 	  "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=thread" $(CMAKE_ARGS)
 	$(CMAKE) --build $(TSAN_DIR) --parallel
 	env -u CRYPTO_SERVICE_URL TSAN_OPTIONS=halt_on_error=1 \
-	  $(TSAN_DIR)/tests/crypto_service_sdk_tests --gtest_filter='AsyncClient.*:CurlMultiTransport.*:Operations.*:Client.*'
+	  $(TSAN_DIR)/tests/crypto_service_sdk_tests --gtest_filter='AsyncClient.*:CurlMultiTransport.*:CurlSeam.*:CurlFailure.*:Operations.*:Client.*'
 
 format:
 	$(CLANG_FORMAT) -i $(SOURCES)

@@ -1,0 +1,1 @@
+404{"type":"urn:crypto-service:problem:key-not-found","title":"Key not found","status":404,"detail":"Key not found","instance":"/v2/sign","code":"KEY_NOT_FOUND"}

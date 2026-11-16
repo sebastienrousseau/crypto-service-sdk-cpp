@@ -1,0 +1,1 @@
+{"data":{"algorithm":"multi-recipient-secretbox","ciphertext":"AA==","recipients":[{"type":"x25519-ml-kem-768","ephemeralPublicKey":"00","mlKemCiphertext":"01","wrappedKey":"AA=="}]}}

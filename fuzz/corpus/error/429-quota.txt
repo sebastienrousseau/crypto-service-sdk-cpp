@@ -1,0 +1,1 @@
+429{"type":"urn:crypto-service:problem:rate-limited","title":"Too Many Requests","status":429,"detail":"slow down","limit":60,"resetSeconds":12}

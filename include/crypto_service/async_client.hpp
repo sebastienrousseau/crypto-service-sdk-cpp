@@ -78,7 +78,7 @@ class AsyncClient : public Operations<AsyncClient, std::future> {
   friend class Operations<AsyncClient, std::future>;
 
   template <typename Result>
-  std::future<Result> dispatch(const detail::Route& route, std::optional<std::string> body,
+  std::future<Result> dispatch(const detail::Route& route, std::optional<std::string>&& body,
                                const CallOptions& call) {
     auto promise = std::make_shared<std::promise<Result>>();
     std::future<Result> future = promise->get_future();

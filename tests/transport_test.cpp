@@ -204,5 +204,24 @@ TEST(CurlMultiTransport, DirectUse) {
   // Destroyed with the second transfer still running.
 }
 
+// A scheme outside http and https fails inside the first
+// curl_multi_perform, so poll() returns it without waiting. This keeps
+// that path covered without depending on how fast a server answers.
+TEST(CurlMultiTransport, ATransferEndedOnTheFirstPerformIsReturnedAtOnce) {
+  auto transport = make_curl_multi_transport();
+  HttpRequest request;
+  request.method = "GET";
+  request.url = "ftp://127.0.0.1/";
+  request.timeout = milliseconds(5000);
+  transport->start(7, request);
+  const auto before = std::chrono::steady_clock::now();
+  const std::vector<TransferResult> done = transport->poll(milliseconds(10000));
+  EXPECT_LT(std::chrono::steady_clock::now() - before, milliseconds(5000));
+  ASSERT_EQ(done.size(), 1U);
+  EXPECT_EQ(done[0].id, 7U);
+  EXPECT_FALSE(done[0].response.has_value());
+  EXPECT_THROW(std::rethrow_exception(done[0].error), TransportError);
+}
+
 }  // namespace
 }  // namespace crypto_service

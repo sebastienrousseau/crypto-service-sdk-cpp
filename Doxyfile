@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+# The API reference for the public headers, rendered into docs/api/ by
+# `make docs` before MkDocs builds the manual. Every public member must
+# be documented: a warning fails the build. The `detail` namespace is
+# internal and left out.
+PROJECT_NAME           = crypto-service-sdk-cpp
+PROJECT_NUMBER         = 0.0.40
+PROJECT_BRIEF          = "A typed C++17 client for the crypto-server REST API"
+INPUT                  = include/crypto_service
+RECURSIVE              = YES
+FILE_PATTERNS          = *.hpp
+EXCLUDE                = include/crypto_service/detail
+EXCLUDE_SYMBOLS        = crypto_service::detail crypto_service::detail::*
+OUTPUT_DIRECTORY       = docs
+HTML_OUTPUT            = api
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_TREEVIEW      = YES
+HAVE_DOT               = NO
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+HIDE_UNDOC_MEMBERS     = NO
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO
+WARN_AS_ERROR          = FAIL_ON_WARNINGS
+QUIET                  = YES
+JAVADOC_AUTOBRIEF      = YES
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = include
+STRIP_FROM_INC_PATH    = include
+SOURCE_BROWSER         = YES
+HTML_FOOTER            = docs/doxygen-footer.html

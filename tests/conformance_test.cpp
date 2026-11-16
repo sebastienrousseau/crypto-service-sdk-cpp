@@ -42,11 +42,13 @@ std::optional<ClientOptions> options_for(const json& auth, const std::string& gr
   ClientOptions options;
   options.base_url = env("CRYPTO_SERVICE_URL").value_or("");
   options.timeout = std::chrono::seconds(60);
-  // The password routes allow 5 requests per 16 s per client address; a
-  // 429 was not processed, so waiting it out keeps back-to-back runs
-  // (and the other SDKs' runs against the same server) from failing.
+  // Some routes have their own per-address limit in a one-minute window
+  // (password hash and verify: 5; SLH-DSA keygen and sign: 10). A 429
+  // was not processed, so waiting out its Retry-After (up to the whole
+  // window) keeps back-to-back runs, and the other SDKs' runs against
+  // the same server, from failing.
   options.retry.max_retries = 3;
-  options.retry.max_delay = std::chrono::seconds(20);
+  options.retry.max_delay = std::chrono::seconds(60);
   if (auth == "none") {
     return options;
   }

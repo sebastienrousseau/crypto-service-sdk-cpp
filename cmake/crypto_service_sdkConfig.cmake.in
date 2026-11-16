@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+# Package config for find_package(crypto_service_sdk CONFIG): defines
+# the imported target crypto_service::sdk and finds what it links
+# (nlohmann/json, installed with it, the system libcurl and threads).
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(nlohmann_json 3.12)
+find_dependency(CURL 7.85)
+find_dependency(Threads)
+
+include("${CMAKE_CURRENT_LIST_DIR}/crypto_service_sdkTargets.cmake")
+check_required_components(crypto_service_sdk)

@@ -1,0 +1,374 @@
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+# Lint (version files, clang-format, file size, the complexity ceilings
+# measured by rust-code-analysis, and clang-tidy), build and unit tests
+# on GCC and Clang (each also with ASan and UBSan), ThreadSanitizer,
+# 100% line and branch coverage, the installed CMake package, the
+# conformance kit against a live crypto-server built at ci/server.ref,
+# and the API compatibility check against the last tag.
+#
+# The server is checked out to .server/; every lint, size and complexity
+# check measures named SDK directories only, so it never reaches into
+# .server/ or its node_modules.
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/*"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Format, file size, complexity and clang-tidy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CXX: clang++-18
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+      - name: Tool versions
+        run: |
+          cmake --version
+          clang-format-18 --version
+          clang-tidy-18 --version
+
+      - name: Version files agree
+        run: make versions
+
+      - name: Shell scripts (shellcheck)
+        run: shellcheck scripts/*.sh scripts/verify-release-versions
+
+      - name: Format and file size
+        run: make format-check filesize CLANG_FORMAT=clang-format-18
+
+      - name: Cache rust-code-analysis-cli
+        id: rca-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cargo/bin/rust-code-analysis-cli
+          key: rca-0.0.25-${{ runner.os }}
+
+      - name: Install rust-code-analysis-cli
+        if: steps.rca-cache.outputs.cache-hit != 'true'
+        run: cargo install rust-code-analysis-cli --version 0.0.25 --locked
+
+      - name: Complexity ceilings (cyclomatic, cognitive, Halstead, lines)
+        run: make complexity
+
+      - name: clang-tidy (bugprone, performance, complexity ceilings)
+        run: make tidy CLANG_TIDY=clang-tidy-18
+
+  build:
+    name: Build and unit tests (${{ matrix.name }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: gcc
+            cc: gcc
+            cxx: g++
+            flags: ""
+          - name: gcc-sanitizers
+            cc: gcc
+            cxx: g++
+            flags: "-fsanitize=address,undefined -fno-sanitize-recover=undefined"
+          - name: clang
+            cc: clang-18
+            cxx: clang++-18
+            flags: ""
+          - name: clang-sanitizers
+            cc: clang-18
+            cxx: clang++-18
+            flags: "-fsanitize=address,undefined -fno-sanitize-recover=undefined"
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+      - name: Build with warnings as errors, run the tests
+        env:
+          FLAGS: ${{ matrix.flags }}
+        run: |
+          make test CMAKE_ARGS="-DCMAKE_CXX_FLAGS='$FLAGS' -DCMAKE_EXE_LINKER_FLAGS='$FLAGS'"
+
+      - name: The examples were built
+        run: for name in hash aead sign_verify ml_kem errors async_concurrent; do test -x "build/crypto_service_$name"; done
+
+  tsan:
+    name: ThreadSanitizer (AsyncClient, transports)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CC: clang-18
+      CXX: clang++-18
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+      # ubuntu-24.04's kernel randomises mmap more than TSan's shadow
+      # layout allows; lower it for this job only.
+      - name: Allow TSan's memory layout
+        run: sudo sysctl vm.mmap_rnd_bits=28
+
+      - name: Shared clients, destruction with calls in flight
+        run: make tsan
+
+  package:
+    name: Installed CMake package (find_package)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+      - name: Install to a prefix, build and run a consumer against it
+        run: make package-test
+
+  coverage:
+    name: Coverage (100% line and branch)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      # GoogleTest also enables C, and the coverage link flags are clang's.
+      CC: clang-18
+      CXX: clang++-18
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+      - name: Unit tests with source-based coverage, gate at 100%
+        run: make coverage LLVM_COV=llvm-cov-18 LLVM_PROFDATA=llvm-profdata-18
+
+      - name: Upload the coverage report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage
+          path: |
+            build-coverage/coverage.lcov
+            build-coverage/coverage.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+  conformance:
+    name: Conformance kit against crypto-server
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CRYPTO_SERVICE_URL: http://127.0.0.1:3104
+      # Synthetic values: the server is started with them below, and the
+      # kit signs its test JWTs with the secret.
+      CRYPTO_SERVICE_API_KEY: ci-synthetic-key-0123456789abcdef
+      CRYPTO_SERVICE_JWT_SECRET: ci-synthetic-jwt-secret-0123456789abcdef0123
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # ci/server.ref comes from the pull request, so it is checked to be
+      # a full commit SHA and fetched with git rather than handed to
+      # actions/checkout as a ref.
+      # Dot-prefixed: no lint, size or complexity check looks there.
+      - name: Check out crypto-server at the commit in ci/server.ref
+        run: |
+          ref="$(tr -d '[:space:]' < ci/server.ref)"
+          if ! [[ "$ref" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "ci/server.ref must hold a full 40-character commit SHA" >&2
+            exit 1
+          fi
+          git init -q .server
+          git -C .server fetch -q --depth 1 \
+            https://github.com/sebastienrousseau/crypto-service.git "$ref"
+          git -C .server checkout -q --detach FETCH_HEAD
+          test "$(git -C .server rev-parse HEAD)" = "$ref"
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 11.9.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - name: Build the server
+        working-directory: .server
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm -r run build
+
+      - name: Start crypto-server
+        working-directory: .server/packages/crypto-server
+        run: |
+          PORT=3104 HOST=127.0.0.1 NODE_ENV=development RATE_LIMIT_MAX=100000 \
+            CRYPTO_API_KEY="$CRYPTO_SERVICE_API_KEY" JWT_SECRET="$CRYPTO_SERVICE_JWT_SECRET" \
+            nohup node dist/index.js > "$RUNNER_TEMP/server.log" 2>&1 &
+          for _ in $(seq 1 60); do
+            if curl -fsS "$CRYPTO_SERVICE_URL/health"; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/server.log"
+          exit 1
+
+      - name: Install libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+      - name: Conformance kit and live tests (fail on any skip)
+        run: make conformance
+
+      - name: Every example against the server
+        run: make examples
+
+      - name: Every README code block against the server
+        run: make readme-snippets
+
+      - name: Benchmark smoke run (client-side and loopback, not asserted)
+        run: make bench BENCH_ARGS=--benchmark_min_time=0.01s
+
+      - name: Server log
+        if: failure()
+        run: cat "$RUNNER_TEMP/server.log"
+
+  regression:
+    name: make regression (starts and stops its own server)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      CC: clang-18
+      CXX: clang++-18
+      LLVM_COV: llvm-cov-18
+      LLVM_PROFDATA: llvm-profdata-18
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # ci/server.ref comes from the pull request, so it is checked to be
+      # a full commit SHA and fetched with git rather than handed to
+      # actions/checkout as a ref.
+      - name: Check out crypto-server at the commit in ci/server.ref
+        run: |
+          ref="$(tr -d '[:space:]' < ci/server.ref)"
+          if ! [[ "$ref" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "ci/server.ref must hold a full 40-character commit SHA" >&2
+            exit 1
+          fi
+          git init -q .server
+          git -C .server fetch -q --depth 1 \
+            https://github.com/sebastienrousseau/crypto-service.git "$ref"
+          git -C .server checkout -q --detach FETCH_HEAD
+          test "$(git -C .server rev-parse HEAD)" = "$ref"
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 11.9.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - name: Build the server
+        working-directory: .server
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm -r run build
+
+      - name: Install libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+      - name: make regression
+        env:
+          CRYPTO_SERVICE_SERVER_DIR: ${{ github.workspace }}/.server
+        run: make regression CLANG_FORMAT=clang-format-18 CLANG_TIDY=clang-tidy-18
+
+  api:
+    name: API breakage against the last tag
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Find the last release tag
+        id: baseline
+        run: |
+          tag=$(git describe --tags --abbrev=0 --match 'v*' HEAD 2>/dev/null || true)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if [ -z "$tag" ]; then
+            echo "No v* tag yet: the gate starts with the first release (docs/adr/0005)."
+            echo "Until then the check runs against main for information only."
+          fi
+
+      - name: Install abi-dumper, abi-compliance-checker and libcurl headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            abi-dumper abi-compliance-checker universal-ctags libcurl4-openssl-dev
+
+      - name: Source compatibility with the last tag (the gate)
+        if: steps.baseline.outputs.tag != ''
+        run: scripts/api-check.sh "${{ steps.baseline.outputs.tag }}"
+
+      # No tag yet: exercise the same check against main so the tooling is
+      # known to work before it gates; its result does not fail the job.
+      - name: Compatibility with main (informational, no tag yet)
+        if: steps.baseline.outputs.tag == ''
+        run: scripts/api-check.sh "$(git merge-base HEAD origin/main)" || echo "informational only"
+
+      - name: Upload the compatibility reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: api-check
+          path: build-api/
+          if-no-files-found: ignore
+          retention-days: 14

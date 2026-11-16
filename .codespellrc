@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+# codespell (docs-lint workflow and pre-commit). Skipped: build output,
+# generated docs, the server checkout (.server) and node_modules, editor
+# caches, licence texts, lock files, the fuzz corpus and the
+# conformance kit vendored from crypto-service. "fo" is an RFC 4648
+# base64 test vector in the encoding tests, not a typo.
+[codespell]
+skip = ./.git,./.server,./.cache,*/node_modules,./build,./build-*,./site,./docs/api,./LICENSES,./docs/requirements.txt,./fuzz/corpus,./.github/demo.gif,./conformance
+check-hidden = true
+ignore-words-list = fo

@@ -59,10 +59,9 @@ class CurlMultiTransport final : public AsyncTransport {
  public:
   CurlMultiTransport() {
     detail::ensure_curl_global();
-    multi_.reset(curl_multi_init());
-    // LCOV_EXCL_START: curl_multi_init fails only when memory is exhausted.
+    multi_.reset(detail::curl_calls().multi_init());
+    // curl_multi_init fails only when memory is exhausted.
     detail::require_curl(multi_ != nullptr, "libcurl could not create a multi handle");
-    // LCOV_EXCL_STOP
     curl_multi_setopt(multi_.get(), CURLMOPT_PIPELINING, CURLPIPE_MULTIPLEX);
   }
 
@@ -135,13 +134,13 @@ class CurlMultiTransport final : public AsyncTransport {
   std::vector<TransferResult> collect() {
     std::vector<TransferResult> done;
     int queued = 0;
-    while (CURLMsg* message = curl_multi_info_read(multi_.get(), &queued)) {
+    while (CURLMsg* message = detail::curl_calls().multi_info_read(multi_.get(), &queued)) {
       const auto it = active_.find(message->easy_handle);
-      // LCOV_EXCL_START: every handle on the multi handle is in active_.
+      // Every handle on the multi handle is in active_, and libcurl
+      // queues CURLMSG_DONE only; anything else is skipped, not trusted.
       if (message->msg != CURLMSG_DONE || it == active_.end()) {
         continue;
       }
-      // LCOV_EXCL_STOP
       done.push_back(outcome(*it->second, message->data.result));
       retire(it);
     }

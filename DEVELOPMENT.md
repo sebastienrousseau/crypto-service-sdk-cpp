@@ -102,15 +102,23 @@ target needs three variables, and fails (not skips) without them:
 template instantiation, in `include/` and `src/`. An exclusion is an
 inline `LCOV_EXCL_LINE`, `LCOV_EXCL_BR_LINE` or `LCOV_EXCL_START` /
 `LCOV_EXCL_STOP` marker followed by a reason; `scripts/coverage-gate.py`
-fails a marker without one and prints every exclusion. There are five:
+fails a marker without one and prints every exclusion. There are none.
 
-| Where | Why |
+The defensive paths libcurl cannot be made to take are reached through
+`detail::CurlCalls` (`src/curl_common.hpp`), a test-only table of the
+libcurl calls involved that defaults to libcurl's own functions:
+
+| Path | Test |
 | :--- | :--- |
-| `src/curl_common.cpp`, easy-handle creation | `curl_easy_init` fails only when memory is exhausted |
-| `src/curl_common.cpp`, failure reason | libcurl fills its error buffer on every failed transfer; the fallback to `curl_easy_strerror` is defensive |
-| `src/curl_transport.cpp`, multi-handle creation | `curl_multi_init` fails only when memory is exhausted |
-| `src/curl_transport.cpp`, unknown finished handle | Every handle on the multi handle is tracked; the branch guards an inconsistency that cannot occur |
-| `src/async_client.cpp`, result after cancel | A transport reports nothing after `cancel()`; this guards a custom transport that does |
+| `curl_easy_init` fails (out of memory) | `CurlSeam.EasyHandleCreationFailureIsATransportError` |
+| `curl_multi_init` fails (out of memory) | `CurlSeam.MultiHandleCreationFailureIsATransportError` |
+| The multi handle queues a message that is not a finished transfer of ours | `CurlSeam.StrayMessagesOnTheMultiHandleAreSkipped` |
+| A failed transfer leaves libcurl's error buffer empty | `CurlFailure.EmptyErrorBufferFallsBackToTheCodeDescription` |
+| A custom `AsyncTransport` reports a transfer after `cancel()` | `AsyncClient.ResultAfterCancelIsDropped` |
+
+A test swaps a call in and restores the defaults while no transport or
+`AsyncClient` runs on another thread; production code never changes
+them.
 
 ## Release model
 

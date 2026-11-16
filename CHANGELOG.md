@@ -62,10 +62,11 @@ The first release of the C++ SDK, in lockstep with crypto-service
   1.18.0 and Google Benchmark 1.10.0 by `FetchContent` pinned by
   SHA-256, and an installed package: `find_package(crypto_service_sdk
   0.0.40 CONFIG)` with target `crypto_service::sdk`.
-- Gates: `make check`, 100% line and branch coverage, complexity
-  ceilings (rust-code-analysis-cli 0.0.25), clang-format and clang-tidy
-  18, GCC and Clang with ASan and UBSan, ThreadSanitizer, an API
-  compatibility check, codespell, REUSE, markdownlint and lychee.
+- Gates: `make check`, 100% line and branch coverage with no
+  exclusions, complexity ceilings (rust-code-analysis-cli 0.0.25),
+  clang-format and clang-tidy 18, GCC and Clang with ASan and UBSan,
+  ThreadSanitizer, an API compatibility check, codespell, REUSE,
+  markdownlint and lychee.
 - CI, fuzz, CodeQL, Scorecard, DCO, docs-lint, manual and release
   workflows; the release attaches a source archive, a CycloneDX SBOM,
   `SHA256SUMS` and a build provenance attestation. No package registry.

@@ -80,8 +80,8 @@ std::future<Result> (AsyncClient) or Result (Client)
 ## How it is proven
 
 - Unit tests reach every line and branch outcome of `include/` and
-  `src/` (`make coverage`; five defensive branches are excluded inline,
-  see DEVELOPMENT.md).
+  `src/` (`make coverage`, with no exclusions; the defensive libcurl
+  paths are reached through a test seam, see DEVELOPMENT.md).
 - The conformance kit (`conformance/*.json`, 119 vectors) runs against
   a live crypto-server at `ci/server.ref`, through the typed methods
   wherever a vector's body is one they can express, and `request()`

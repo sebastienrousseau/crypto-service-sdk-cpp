@@ -214,6 +214,26 @@ TEST(AsyncClient, CancelTokenEndsAHangingCall) {
   EXPECT_EQ(state->cancelled.size(), 1U);
 }
 
+// A transport that still reports a transfer after cancel() (the fake's
+// `late` mode): the loop drops the result, whose call has already
+// ended, and carries on with the next call.
+TEST(AsyncClient, ResultAfterCancelIsDropped) {
+  auto state = std::make_shared<FakeState>();
+  state->push(hang());
+  state->push(kit::reply(200, kHashBody));
+  AsyncClient client(kit::fake_options(), std::make_unique<kit::FakeAsyncTransport>(state, true));
+  CancelSource source;
+  auto cancelled = client.hash({}, {source.token()});
+  std::this_thread::sleep_for(milliseconds(20));
+  source.cancel();
+  EXPECT_THROW(cancelled.get(), CancelledError);
+  // The late result was queued before this call started, so it has been
+  // polled (and dropped) by the time this one ends.
+  EXPECT_EQ(client.hash({}).get().length, 1);
+  const std::lock_guard<std::mutex> lock(state->mutex);
+  EXPECT_EQ(state->cancelled.size(), 1U);
+}
+
 TEST(AsyncClient, CancelTokenEndsAWaitingRetry) {
   auto state = std::make_shared<FakeState>();
   state->push(kit::reply(503, ""));

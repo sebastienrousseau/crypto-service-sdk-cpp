@@ -17,6 +17,7 @@ add_executable(
   codec_full_test.cpp
   codec_test.cpp
   conformance_test.cpp
+  curl_seam_test.cpp
   encoding_test.cpp
   kit_test.cpp
   live_test.cpp
@@ -31,10 +32,12 @@ add_executable(
   support/pattern.cpp
   support/sha256.cpp)
 # Tests include the internal headers in src/ (the codec and schemas) to
-# build canned responses and to check the encoders directly.
+# build canned responses and to check the encoders directly, and
+# curl_common.hpp (hence libcurl's headers) to reach its test seam.
 target_include_directories(crypto_service_sdk_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
                                                             ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(crypto_service_sdk_tests PRIVATE crypto_service::sdk GTest::gtest_main)
+target_link_libraries(crypto_service_sdk_tests PRIVATE crypto_service::sdk CURL::libcurl
+                                                       GTest::gtest_main)
 target_compile_definitions(
   crypto_service_sdk_tests PRIVATE CRYPTO_SERVICE_KIT_DIR="${PROJECT_SOURCE_DIR}/conformance"
                                    CRYPTO_SERVICE_PROJECT_VERSION="${PROJECT_VERSION}")

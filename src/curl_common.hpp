@@ -26,6 +26,24 @@ void require_curl(bool ok, const char* what);
 /// curl_global_init once per process (thread-safe).
 void ensure_curl_global();
 
+/// The libcurl calls whose failure or output the SDK cannot provoke
+/// through libcurl itself: the two handle constructors (they fail only
+/// when memory is exhausted) and the multi handle's message queue. Each
+/// defaults to libcurl's own function.
+///
+/// Test-only seam. Production code never changes it. A test swaps a call
+/// in to reach the path that handles its failure, and restores the
+/// defaults, while no transport or AsyncClient is in use on another
+/// thread: the pointers are read without synchronisation.
+struct CurlCalls {
+  CURL* (*easy_init)() = &curl_easy_init;                             ///< curl_easy_init.
+  CURLM* (*multi_init)() = &curl_multi_init;                          ///< curl_multi_init.
+  CURLMsg* (*multi_info_read)(CURLM*, int*) = &curl_multi_info_read;  ///< curl_multi_info_read.
+};
+
+/// The process-wide CurlCalls the transports go through.
+CurlCalls& curl_calls();
+
 struct EasyDeleter {
   void operator()(CURL* handle) const noexcept { curl_easy_cleanup(handle); }
 };

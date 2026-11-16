@@ -181,11 +181,11 @@ struct AsyncClient::Loop {
 
   void ended(TransferResult result) {
     const auto it = calls.find(result.id);
-    // LCOV_EXCL_START: a transport reports nothing after cancel(); this guards one that does.
+    // A transport reports nothing after cancel(); this guards a custom
+    // one that does, whose call has already ended.
     if (it == calls.end()) {
       return;
     }
-    // LCOV_EXCL_STOP
     Call& call = it->second;
     call.in_flight = false;
     const auto now = detail::Clock::now();

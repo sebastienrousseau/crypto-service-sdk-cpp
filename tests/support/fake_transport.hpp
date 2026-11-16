@@ -101,10 +101,13 @@ class FakeTransport final : public Transport {
 };
 
 /// An AsyncTransport double: answers in the next poll(), or holds a
-/// `hang` transfer until cancel().
+/// `hang` transfer until cancel(). With `late`, it breaks the contract
+/// on purpose: a cancelled transfer is still reported, as a
+/// TransportError, by the next poll().
 class FakeAsyncTransport final : public AsyncTransport {
  public:
-  explicit FakeAsyncTransport(std::shared_ptr<FakeState> state) : state_(std::move(state)) {}
+  explicit FakeAsyncTransport(std::shared_ptr<FakeState> state, bool late = false)
+      : state_(std::move(state)), late_(late) {}
 
   void start(std::uint64_t id, const HttpRequest& request) override {
     Reply answer = state_->next(request);
@@ -118,6 +121,10 @@ class FakeAsyncTransport final : public AsyncTransport {
   }
 
   void cancel(std::uint64_t id) override {
+    if (late_) {
+      ready_.push_back(TransferResult{
+          id, std::nullopt, std::make_exception_ptr(TransportError("fake transport: late"))});
+    }
     const std::lock_guard<std::mutex> lock(state_->mutex);
     state_->cancelled.push_back(id);
   }
@@ -147,6 +154,7 @@ class FakeAsyncTransport final : public AsyncTransport {
 
  private:
   std::shared_ptr<FakeState> state_;
+  bool late_ = false;
   std::vector<TransferResult> ready_;  // loop thread only
   std::mutex mutex_;
   std::condition_variable woken_;

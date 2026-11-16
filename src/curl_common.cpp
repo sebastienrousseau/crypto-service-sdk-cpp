@@ -135,12 +135,16 @@ void require_curl(bool ok, const char* what) {
 
 void ensure_curl_global() { static const CurlGlobal global; }
 
+CurlCalls& curl_calls() {
+  static CurlCalls calls;
+  return calls;
+}
+
 EasyHandle new_easy_handle() {
   ensure_curl_global();
-  EasyHandle handle(curl_easy_init());
-  // LCOV_EXCL_START: curl_easy_init fails only when memory is exhausted.
+  EasyHandle handle(curl_calls().easy_init());
+  // curl_easy_init fails only when memory is exhausted.
   require_curl(handle != nullptr, "libcurl could not create a handle");
-  // LCOV_EXCL_STOP
   return handle;
 }
 
@@ -175,10 +179,10 @@ std::exception_ptr failure(CURLcode code, const Exchange& exchange) {
   if (code == CURLE_ABORTED_BY_CALLBACK) {
     return std::make_exception_ptr(CancelledError("crypto-service: the call was cancelled"));
   }
-  // LCOV_EXCL_START: libcurl fills the error buffer on every failure; the fallback is defensive.
+  // libcurl fills the error buffer on every failed transfer; the
+  // fallback to the code's description is defensive.
   const std::string reason =
       exchange.error[0] != '\0' ? exchange.error.data() : curl_easy_strerror(code);
-  // LCOV_EXCL_STOP
   const bool timed_out = code == CURLE_OPERATION_TIMEDOUT;
   return std::make_exception_ptr(
       TransportError(std::string("crypto-service: ") +

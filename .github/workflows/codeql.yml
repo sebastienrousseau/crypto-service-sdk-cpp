@@ -1,8 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
-# CodeQL static analysis of the C++ sources. Build mode is manual: the
-# library, tests and example are compiled with the repository's own
-# CMake build, so CodeQL sees the exact translation units CI ships.
+# CodeQL static analysis of the C++ sources and of the workflows
+# themselves. Build mode is manual for C++: the library, tests and
+# example are compiled with the repository's own CMake build, so CodeQL
+# sees the exact translation units CI ships. The workflows need no build
+# and run as a separate job, so the SARIF filtering below stays scoped
+# to the C++ results.
 name: CodeQL
 
 on:
@@ -76,3 +79,28 @@ jobs:
         with:
           sarif_file: sarif-results
           category: "/language:c-cpp"
+
+  analyze-actions:
+    name: CodeQL (actions)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      security-events: write # upload results to code scanning
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Initialise CodeQL
+        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          languages: actions
+          build-mode: none
+          queries: security-extended
+
+      - name: Analyse
+        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          category: "/language:actions"

@@ -69,13 +69,15 @@ jobs:
       - name: Every version file says the version
         run: scripts/verify-release-versions "${{ steps.version.outputs.version }}"
 
-      - name: The tag is annotated, with the release message
+      - name: The tag is annotated, signed by a key in KEYS.asc, with the release message
         if: github.event_name == 'push'
         run: |
           git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
           test "$(git cat-file -t "$GITHUB_REF_NAME")" = tag
           subject=$(git tag -l --format='%(contents:subject)' "$GITHUB_REF_NAME")
           test "$subject" = "crypto-service-sdk-cpp $GITHUB_REF_NAME"
+          git config gpg.ssh.allowedSignersFile KEYS.asc
+          git verify-tag "$GITHUB_REF_NAME"
 
       - name: Install libcurl headers
         run: |

@@ -356,7 +356,9 @@ jobs:
 
       - name: Source compatibility with the last tag (the gate)
         if: steps.baseline.outputs.tag != ''
-        run: scripts/api-check.sh "${{ steps.baseline.outputs.tag }}"
+        env:
+          BASELINE: ${{ steps.baseline.outputs.tag }}
+        run: scripts/api-check.sh "$BASELINE"
 
       # No tag yet: exercise the same check against main so the tooling is
       # known to work before it gates; its result does not fail the job.

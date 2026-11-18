@@ -60,14 +60,17 @@ jobs:
           else
             version="$INPUT_VERSION"
           fi
-          case "$version" in
-            [0-9]*.[0-9]*.[0-9]*) ;;
-            *) echo "not a version: $version" >&2; exit 1 ;;
-          esac
+          # Digits and dots only: the value reaches shell commands below.
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "not a version: $version" >&2
+            exit 1
+          fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Every version file says the version
-        run: scripts/verify-release-versions "${{ steps.version.outputs.version }}"
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: scripts/verify-release-versions "$VERSION"
 
       - name: The tag is annotated, signed by a key in KEYS.asc, with the release message
         if: github.event_name == 'push'

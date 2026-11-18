@@ -305,8 +305,8 @@ environment, and CI smoke-runs every scenario (`make bench`).
 | `base_url` | `std::string` | none | `http://` or `https://` origin, optionally with a path prefix; trailing `/` removed |
 | `api_key` | `std::optional<std::string>` | unset | Sent as `x-api-key` |
 | `token` | `std::optional<std::string>` | unset | Sent as `Authorization: Bearer <token>` |
-| `timeout` | `std::chrono::milliseconds` | 30 s | Per attempt, connect plus transfer |
-| `deadline` | `std::optional<std::chrono::milliseconds>` | unset | Whole call, retries and backoff included |
+| `timeout` | `std::chrono::milliseconds` | 30 s | Per attempt, connect plus transfer; at most 24 h |
+| `deadline` | `std::optional<std::chrono::milliseconds>` | unset | Whole call, retries and backoff included; at most 24 h |
 | `retry` | `RetryOptions` | no retries | See below |
 | `traceparent` | `std::optional<std::string>` | unset | A fixed W3C `traceparent` for every request |
 | `auto_traceparent` | `bool` | false | A fresh random `traceparent` per request |

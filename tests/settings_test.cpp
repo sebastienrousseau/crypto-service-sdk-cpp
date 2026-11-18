@@ -87,6 +87,26 @@ TEST(Settings, RetryRanges) {
   EXPECT_NO_THROW((void)detail::settle(with_retry(100, 0, 3600000)));
 }
 
+// A deadline is added to a steady_clock time point in nanoseconds, so
+// an unbounded one overflowed (undefined behaviour); a timeout goes to
+// libcurl as a long, 32 bits on Windows. Both are capped at a day.
+TEST(Settings, TimeoutAndDeadlineAreAtMostADay) {
+  const auto with = [](auto change) {
+    ClientOptions options = base();
+    change(options);
+    return options;
+  };
+  constexpr auto kDay = std::chrono::hours(24);
+  rejects(with([](ClientOptions& o) { o.deadline = milliseconds::max(); }));
+  rejects(with([&](ClientOptions& o) { o.deadline = kDay + milliseconds(1); }));
+  rejects(with([](ClientOptions& o) { o.timeout = milliseconds::max(); }));
+  rejects(with([&](ClientOptions& o) { o.timeout = kDay + milliseconds(1); }));
+  EXPECT_NO_THROW((void)detail::settle(with([&](ClientOptions& o) {
+    o.timeout = kDay;
+    o.deadline = kDay;
+  })));
+}
+
 TEST(Settings, DescribeRedactsCredentials) {
   ClientOptions options = base();
   options.base_url = "https://user:pw@crypto.test/x";

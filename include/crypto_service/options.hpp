@@ -45,10 +45,12 @@ struct ClientOptions {
   std::optional<std::string> api_key;
   /// Sent as `Authorization: Bearer <token>` (an HS256 JWT).
   std::optional<std::string> token;
-  /// Per-attempt timeout (connect plus transfer). Must be positive.
+  /// Per-attempt timeout (connect plus transfer). Must be positive and
+  /// at most 24 hours.
   std::chrono::milliseconds timeout{std::chrono::seconds(30)};
   /// Overall time budget per call, retries and backoff included. Unset
-  /// means only the per-attempt timeout applies.
+  /// means only the per-attempt timeout applies. Must be positive and at
+  /// most 24 hours.
   std::optional<std::chrono::milliseconds> deadline;
   /// Retries for transient failures; none by default.
   RetryOptions retry{};

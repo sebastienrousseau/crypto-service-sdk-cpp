@@ -6,6 +6,17 @@ All notable changes to this project are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 advance in `0.0.1` steps in lockstep with the Crypto Service ecosystem.
 
+## [Unreleased]
+
+### Fixed
+
+- `ClientOptions::timeout` and `ClientOptions::deadline` are now
+  rejected above 24 hours with `std::invalid_argument`. An unbounded
+  deadline overflowed the `steady_clock` arithmetic of the call budget
+  (undefined behaviour, found in the 2026-11 security review), and a
+  timeout above about 24.8 days did not fit libcurl's `long` on
+  Windows.
+
 ## [0.0.40] - 2026-11-16
 
 The first release of the C++ SDK, in lockstep with crypto-service

@@ -28,6 +28,10 @@ namespace {
 using std::chrono::milliseconds;
 
 constexpr auto kLongestDelay = std::chrono::hours(1);
+// The longest timeout or deadline: a deadline is added to a steady_clock
+// time point, and a timeout goes to libcurl as a long (32 bits on
+// Windows); a day keeps both in range.
+constexpr auto kLongestWait = std::chrono::hours(24);
 constexpr int kMostRetries = 100;
 
 bool starts_with(std::string_view text, std::string_view prefix) {
@@ -95,8 +99,10 @@ void check_retry(const RetryOptions& retry) {
 void check_options(const ClientOptions& options) {
   check_secret(options.api_key, "api_key must be non-empty without control characters");
   check_secret(options.token, "token must be non-empty without control characters");
-  require(options.timeout.count() > 0, "timeout must be positive");
-  require(!options.deadline || options.deadline->count() > 0, "deadline must be positive");
+  require(options.timeout.count() > 0 && options.timeout <= kLongestWait,
+          "timeout must be positive and at most 24 hours");
+  require(!options.deadline || (options.deadline->count() > 0 && *options.deadline <= kLongestWait),
+          "deadline must be positive and at most 24 hours");
   require(!options.traceparent || valid_traceparent(*options.traceparent),
           "traceparent must be a W3C traceparent (00-<32 hex>-<16 hex>-<2 hex>)");
   check_retry(options.retry);

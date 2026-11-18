@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.20)
 # The version below is the single source of truth: version.hpp is
 # generated from it and scripts/verify-release-versions checks every
 # other file against it.
-project(crypto_service_sdk VERSION 0.0.40 DESCRIPTION "C++ client for the crypto-server REST API"
+project(crypto_service_sdk VERSION 0.0.41 DESCRIPTION "C++ client for the crypto-server REST API"
         LANGUAGES CXX)
 
 include(FetchContent)
@@ -118,7 +118,7 @@ endif()
 # `cmake --install` puts the library, the public headers (version.hpp
 # included) and lib/cmake/crypto_service_sdk/ (package config, targets,
 # version) under the prefix, so a consumer writes
-# find_package(crypto_service_sdk 0.0.40 CONFIG) and links
+# find_package(crypto_service_sdk 0.0.41 CONFIG) and links
 # crypto_service::sdk. Every 0.0.x release may break the API, so the
 # version file accepts the exact version only.
 if(CRYPTO_SERVICE_SDK_INSTALL)

@@ -139,7 +139,7 @@ the only one open against `main`.
    nothing.
 3. **Tag**: the maintainer pushes a signed, annotated tag whose message
    is `crypto-service-sdk-cpp v<version>`:
-   `git tag -s v0.0.40 -m "crypto-service-sdk-cpp v0.0.40" && git push origin v0.0.40`.
+   `git tag -s v0.0.41 -m "crypto-service-sdk-cpp v0.0.41" && git push origin v0.0.41`.
 4. **Release**: the tag triggers `release.yml`. It checks the tag
    (`scripts/verify-release-tag`: annotated, signed by a key in
    `KEYS.asc`, with the release message, and the commit being built)

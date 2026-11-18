@@ -8,12 +8,13 @@
 This package follows the
 [Crypto Service](https://github.com/sebastienrousseau/crypto-service)
 ecosystem cadence. While pre-`1.0`, the latest released `0.0.x`
-receives security fixes; older `0.0.x` versions do not. `0.0.40` is the
+receives security fixes; older `0.0.x` versions do not. `0.0.40` was the
 first release of this SDK.
 
 | Version | Status | Receives security fixes? |
 | :--- | :--- | :--- |
-| `0.0.40` (latest) | Current | Yes |
+| `0.0.41` (latest) | Current | Yes |
+| `0.0.40` | Previous | Until 0.0.41 is released |
 | `main` | In development | Yes |
 
 ## Reporting a vulnerability

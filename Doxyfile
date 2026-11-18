@@ -6,7 +6,7 @@
 # be documented: a warning fails the build. The `detail` namespace is
 # internal and left out.
 PROJECT_NAME           = crypto-service-sdk-cpp
-PROJECT_NUMBER         = 0.0.40
+PROJECT_NUMBER         = 0.0.41
 PROJECT_BRIEF          = "A typed C++17 client for the crypto-server REST API"
 INPUT                  = include/crypto_service
 RECURSIVE              = YES

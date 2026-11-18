@@ -23,7 +23,8 @@ each release is tested against the crypto-server commit recorded in
 
 | Version | Status | Supported |
 | :--- | :--- | :--- |
-| `0.0.40` (latest) | Current | Yes |
+| `0.0.41` (latest) | Current | Yes |
+| `0.0.40` | Previous | Until 0.0.41 is released |
 | `main` | In development | Yes |
 
 ## Questions and bugs

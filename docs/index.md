@@ -16,13 +16,14 @@ include(FetchContent)
 FetchContent_Declare(
   crypto_service_sdk
   GIT_REPOSITORY https://github.com/sebastienrousseau/crypto-service-sdk-cpp.git
-  GIT_TAG        v0.0.40)
+  GIT_TAG        v0.0.41)
 FetchContent_MakeAvailable(crypto_service_sdk)
 target_link_libraries(your_app PRIVATE crypto_service::sdk)
 ```
 
-Or install it and use `find_package(crypto_service_sdk 0.0.40 CONFIG)`;
-see [Packaging](packaging.md).
+Or install it and use `find_package(crypto_service_sdk 0.0.41 CONFIG)`;
+see [Packaging](packaging.md). The snippets name the version `main`
+prepares; until its tag exists, use the newest release (`v0.0.40`).
 
 ## Quick start
 

@@ -7,7 +7,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(crypto_service_sdk_consumer LANGUAGES CXX)
 
-find_package(crypto_service_sdk 0.0.40 CONFIG REQUIRED)
+find_package(crypto_service_sdk 0.0.41 CONFIG REQUIRED)
 
 add_executable(consumer main.cpp)
 target_link_libraries(consumer PRIVATE crypto_service::sdk)

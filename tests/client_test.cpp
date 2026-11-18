@@ -164,9 +164,11 @@ TEST(Client, CancelledBeforeSending) {
   EXPECT_TRUE(f.state->seen().empty());
 }
 
+// Retry-After fixes the wait at 5 s: a jittered backoff is uniform in
+// [0, max_delay] and sometimes ended before the cancel at 30 ms.
 TEST(Client, CancellationEndsTheBackoffWait) {
   Fixture f;
-  f.state->push(kit::reply(503, ""));
+  f.state->push(kit::reply(503, "", {{"Retry-After", "5"}}));
   ClientOptions options = Fixture::retrying(1);
   options.retry.initial_delay = options.retry.max_delay = milliseconds(5000);
   options.sleep = nullptr;

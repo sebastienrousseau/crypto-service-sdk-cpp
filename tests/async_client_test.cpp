@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // AsyncClient's event loop on a fake transport: concurrent callers,
 // retries on timers, the deadline, cancellation, a transport that

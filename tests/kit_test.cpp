@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The kit runner itself, without a server: the vendored kit is intact
 // (SHA256SUMS), the pinned server commit is recorded, and the template

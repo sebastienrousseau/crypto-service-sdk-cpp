@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 """Fail unless the library has 100% line and branch coverage.
 
 Reads what `llvm-cov export` writes for source-based coverage (clang):

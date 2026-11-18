@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The retry decisions (ported from the TypeScript SDK's request.ts):
 // which outcomes retry, the backoff bounds, Retry-After and the

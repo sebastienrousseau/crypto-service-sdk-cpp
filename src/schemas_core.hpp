@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Internal: the wire schema of the symmetric, hashing and key structs.
 // Names and encodings follow openapi/crypto-service.openapi.yaml at the

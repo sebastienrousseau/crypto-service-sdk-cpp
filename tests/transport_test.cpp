@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The libcurl transports against a scripted loopback HTTP server: what
 // goes on the wire, timeouts, refused connections, cancellation, TLS,

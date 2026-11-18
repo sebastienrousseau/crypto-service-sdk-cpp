@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // KMS routes (managed keys on a provider) and the OPAQUE (RFC 9807)
 // password-authenticated key exchange. KMS ciphertexts and wrapped keys

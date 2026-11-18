@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // libFuzzer target: any bytes as the body of a 200 response, decoded as
 // a spread of result types (wrapped in `data`, bare string data, nested

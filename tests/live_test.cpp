@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Typed round trips against a live crypto-server that the kit does not
 // cover: binary HPKE and KMS plaintexts, the async client under

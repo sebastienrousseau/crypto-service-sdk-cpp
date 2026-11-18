@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The conformance kit against a live crypto-server, one test per vector
 // file, vectors in order with captures carried forward. Typed methods

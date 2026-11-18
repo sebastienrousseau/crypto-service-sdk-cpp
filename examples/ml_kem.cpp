@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // ML-KEM-768 with a server-held key: generate it, encapsulate a shared
 // secret to its public key, decapsulate by key id, compare.

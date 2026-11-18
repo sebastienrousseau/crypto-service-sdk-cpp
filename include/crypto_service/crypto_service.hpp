@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The Crypto Service SDK for C++: a thin client over crypto-server's
 // REST API. Include this header for everything.

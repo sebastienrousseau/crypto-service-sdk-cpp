@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The table-driven codec: every value type in both directions, optional
 // members present and absent, bare `data` values, the constant KMS

@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Known vulnerabilities in the pinned FetchContent archives
 # (nlohmann/json, GoogleTest, Google Benchmark): scripts/osv-check.py asks

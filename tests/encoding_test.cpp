@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Hex and base64 against RFC 4648 section 10 test vectors, and every
 // malformed-input branch.

@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Fast checks before a commit: `pre-commit install`, then they run on
 # every `git commit`. CI runs the full gate; these catch the cheap

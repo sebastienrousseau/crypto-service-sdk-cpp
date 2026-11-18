@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Dependabot has no CMake FetchContent ecosystem, so the nlohmann/json,
 # GoogleTest and Google Benchmark pins in the CMake files are checked

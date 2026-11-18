@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // A scripted HTTP/1.1 server on 127.0.0.1 for testing the libcurl
 // transport without a crypto-server: it answers each connection with

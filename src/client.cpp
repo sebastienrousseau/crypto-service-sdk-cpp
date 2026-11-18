@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The blocking Client: one call at a time through its Transport, with
 // retries, backoff waits that notice cancellation, and the deadline.

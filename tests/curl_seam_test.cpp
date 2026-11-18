@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The libcurl paths a test cannot provoke through libcurl itself, reached
 // through the detail::CurlCalls seam and detail::failure: handle

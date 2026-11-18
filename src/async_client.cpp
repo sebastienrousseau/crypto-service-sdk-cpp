@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // AsyncClient's event loop. Callers queue calls under a mutex and wake
 // the loop; the loop thread alone touches the transport and the calls in

@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Release on a signed tag v<version>: check the tag and every version
 # file, run the tests and the installed-package test, then build the

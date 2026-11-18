@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Shared by the examples: client options from the environment.
 //   CRYPTO_SERVICE_URL      the server, e.g. http://127.0.0.1:3104

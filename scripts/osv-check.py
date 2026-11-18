@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 """Fail when OSV lists a known vulnerability in a pinned dependency.
 
 nlohmann/json, GoogleTest and Google Benchmark are FetchContent archives

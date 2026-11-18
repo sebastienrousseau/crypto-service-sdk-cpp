@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 cmake_minimum_required(VERSION 3.20)
 
 # The version below is the single source of truth: version.hpp is

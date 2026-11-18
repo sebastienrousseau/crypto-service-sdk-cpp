@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 """Per-function complexity ceilings (AGENTS.md, Quality gates).
 
 Measures every C++ function in include/, src/, tests/, examples/, fuzz/

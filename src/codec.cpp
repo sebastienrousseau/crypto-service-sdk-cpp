@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The non-template half of the codec: member lookup, scalar decoding
 // and the hex and base64 conversion of byte members.

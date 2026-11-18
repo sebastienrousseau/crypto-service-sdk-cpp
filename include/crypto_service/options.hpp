@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Client configuration (ClientOptions, RetryOptions), per-call options
 // (CallOptions) and cooperative cancellation (CancelSource, CancelToken).

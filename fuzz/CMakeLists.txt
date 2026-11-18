@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Fuzz targets for success-response decoding and problem parsing, built only with
 # CRYPTO_SERVICE_SDK_BUILD_FUZZERS=ON. The libfuzzer engine needs clang's

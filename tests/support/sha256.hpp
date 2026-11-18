@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // A small FIPS 180-4 SHA-256 and HMAC-SHA256, so the kit checksum test
 // and the conformance tokens need no crypto library. Test support only:

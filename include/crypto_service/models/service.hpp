@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Service metadata, probes, the algorithm catalogue and the compliance
 // documents (DORA self-assessment, CycloneDX CBOM).

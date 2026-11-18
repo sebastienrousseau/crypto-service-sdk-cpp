@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Public-key routes: ML-KEM and hybrid X25519 + ML-KEM key exchange,
 // ML-DSA and SLH-DSA signatures, sealed boxes, post-quantum STREAM

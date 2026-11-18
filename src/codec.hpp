@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Internal: a table-driven JSON codec. Each request and result struct
 // has a Schema listing its members (wire name, member pointer, text

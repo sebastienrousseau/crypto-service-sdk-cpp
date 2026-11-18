@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Transport doubles: they record every request and answer from a
 // script, so client behaviour is tested without a server. FakeAsync is

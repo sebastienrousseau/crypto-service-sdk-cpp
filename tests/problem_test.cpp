@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // RFC 9457 problems from error responses, the about:blank fallback, the
 // error types, response helpers and the decoding of 2xx bodies.

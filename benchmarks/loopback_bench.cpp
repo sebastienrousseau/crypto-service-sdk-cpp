@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // round_trip_hash: one SHA-256 of a short text through the blocking
 // client to the crypto-server at CRYPTO_SERVICE_URL (with

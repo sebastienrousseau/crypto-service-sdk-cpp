@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The blocking Client on a fake transport: errors, retries and their
 // waits, the stateful-route rule, the deadline, cancellation, redirects,

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 """Write the CycloneDX 1.5 SBOM for a release, from the CMake pins.
 
 The SDK's dependencies are not in a package manifest an SBOM scanner

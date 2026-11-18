@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # A consumer of the installed package: `make package-test` installs the
 # SDK into a staging prefix, configures this project against it with

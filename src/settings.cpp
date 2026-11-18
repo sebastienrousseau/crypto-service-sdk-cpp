@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Option validation, request construction, the retry-safety rule for
 // stateful routes, traceparent generation and the per-call time budget.

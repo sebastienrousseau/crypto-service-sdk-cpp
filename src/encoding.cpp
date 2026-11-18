@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Hex and base64 text encodings of binary values. Not cryptography: the
 // API carries bytes as text, and these convert between the two.

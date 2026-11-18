@@ -140,13 +140,18 @@ the only one open against `main`.
    is `crypto-service-sdk-cpp v<version>`:
    `git tag -s v0.0.40 -m "crypto-service-sdk-cpp v0.0.40" && git push origin v0.0.40`.
 4. **Release**: the tag triggers `release.yml`. It checks the tag
-   message and the version files, runs the tests and the package test,
+   (`scripts/verify-release-tag`: annotated, signed by a key in
+   `KEYS.asc`, with the release message, and the commit being built)
+   and the version files, runs the tests and the package test,
    builds `crypto-service-sdk-cpp-<version>.tar.gz` (`git archive`), the
    CycloneDX SBOM (`scripts/sbom.py`, from the CMake pins) and
-   `SHA256SUMS`, attests their provenance, and creates the release
+   `SHA256SUMS`, builds the archive and SBOM a second time and checks
+   them against `SHA256SUMS` ([reproducing a release](docs/REPRODUCING.md)),
+   attests their provenance, and creates the release
    titled `crypto-service-sdk-cpp <version>` with notes from
    `scripts/release-notes.sh`. The publish job runs in the `release`
-   environment. Re-running it updates the release in place.
+   environment. Re-running it updates the release in place; a
+   `workflow_dispatch` with `dry_run` off must be run on the tag itself.
 5. **Audit**: the workflow checks the live title and notes; then
    confirm with `gh release view v<version> --json name,body`.
 

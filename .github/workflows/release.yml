@@ -10,8 +10,11 @@
 #
 # workflow_dispatch runs the same build as a dry run by default: it
 # prints the notes and uploads the files as a workflow artifact, and the
-# publish job is skipped. Re-running is safe: an existing release is
-# updated in place (assets replaced, title and notes rewritten).
+# publish job is skipped. With dry_run off it is a release like a tag
+# push, and the same tag check applies: it must be dispatched on the
+# signed tag v<version> itself, so the files come from the tag's commit.
+# Re-running is safe: an existing release is updated in place (assets
+# replaced, title and notes rewritten).
 name: Release
 
 on:
@@ -72,15 +75,13 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: scripts/verify-release-versions "$VERSION"
 
+      # Whenever the run can publish (a tag push, or a dispatch with
+      # dry_run off), the build must be of the signed tag's own commit.
       - name: The tag is annotated, signed by a key in KEYS.asc, with the release message
-        if: github.event_name == 'push'
-        run: |
-          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
-          test "$(git cat-file -t "$GITHUB_REF_NAME")" = tag
-          subject=$(git tag -l --format='%(contents:subject)' "$GITHUB_REF_NAME")
-          test "$subject" = "crypto-service-sdk-cpp $GITHUB_REF_NAME"
-          git config gpg.ssh.allowedSignersFile KEYS.asc
-          git verify-tag "$GITHUB_REF_NAME"
+        if: github.event_name == 'push' || inputs.dry_run == false
+        env:
+          TAG: v${{ steps.version.outputs.version }}
+        run: scripts/verify-release-tag "$TAG"
 
       - name: Install libcurl headers
         run: |

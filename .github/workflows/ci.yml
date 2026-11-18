@@ -56,7 +56,7 @@ jobs:
         run: cmp <(python3 scripts/sbom.py 0.0.0) <(python3 scripts/sbom.py 0.0.0)
 
       - name: Shell scripts (shellcheck)
-        run: shellcheck scripts/*.sh scripts/verify-release-versions
+        run: shellcheck scripts/*.sh scripts/verify-release-versions scripts/verify-release-tag
 
       - name: Format and file size
         run: make format-check filesize CLANG_FORMAT=clang-format-18

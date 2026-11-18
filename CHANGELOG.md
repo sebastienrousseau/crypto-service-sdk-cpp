@@ -9,6 +9,38 @@ advance in `0.0.1` steps in lockstep with the Crypto Service ecosystem.
 
 ## [Unreleased]
 
+### Added
+
+- `docs/ASSURANCE.md`, the assurance case: assets, actors, entry
+  points, trust boundaries, the secure design principles applied and
+  the common weaknesses countered, each with its code and test.
+- `docs/security-review-2026-11.md`, the first recorded security
+  review, with eleven findings and their dispositions.
+- `docs/REPRODUCING.md`: how to rebuild a release's archive and SBOM
+  and check them against `SHA256SUMS`; the `0.0.40` archive rebuilds
+  bit for bit.
+- `scripts/osv-check.py` and the OSV workflow: the pinned
+  nlohmann/json, GoogleTest and Google Benchmark archives are checked
+  against OSV on every change and weekly.
+- CI builds and tests with the recommended compiler hardening flags on
+  GCC and Clang (`gcc-hardened`, `clang-hardened`).
+- `SPDX-FileCopyrightText` in every source file beside its licence
+  identifier.
+
+### Changed
+
+- The release SBOM's `serialNumber` is derived from its content, so a
+  rebuild gives the same bytes; the release workflow builds the files
+  twice and compares them.
+
+### Security
+
+- The release workflow accepts only a numeric version and passes step
+  outputs to scripts through the environment, never by interpolation.
+- A release published by `workflow_dispatch` now needs the same signed
+  tag as a tag push, pointing at the commit being built
+  (`scripts/verify-release-tag`).
+
 ### Fixed
 
 - `ClientOptions::timeout` and `ClientOptions::deadline` are now

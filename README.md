@@ -91,10 +91,11 @@ target_link_libraries(your_app PRIVATE crypto_service::sdk)
 ```
 
 The package version file accepts the exact version only. Each GitHub
-release carries the source archive, a CycloneDX SBOM, `SHA256SUMS` and
-a build provenance attestation. There is no vcpkg or Conan package yet
-([`docs/packaging.md`](docs/packaging.md)); until the first tag is
-published, pin a commit SHA instead.
+release, from `v0.0.40` on, carries the source archive, a CycloneDX
+SBOM, `SHA256SUMS` and a build provenance attestation; the files can be
+rebuilt bit for bit ([`docs/REPRODUCING.md`](docs/REPRODUCING.md)).
+There is no vcpkg or Conan package yet
+([`docs/packaging.md`](docs/packaging.md)).
 
 ---
 
@@ -405,6 +406,10 @@ control characters so they cannot inject headers. Response decoding and
 problem parsing are fuzzed with libFuzzer under ASan and UBSan, and the
 seed corpus is replayed by ctest on every build. Releases carry
 `SHA256SUMS`, a CycloneDX SBOM and a build provenance attestation.
+The [assurance case](docs/ASSURANCE.md) argues these guarantees against
+the code, and the
+[November 2026 security review](docs/security-review-2026-11.md)
+checked it.
 
 Report vulnerabilities according to [`SECURITY.md`](SECURITY.md).
 

@@ -33,7 +33,7 @@ install.
 | CI job (workflow) | Local command | What it checks |
 | :--- | :--- | :--- |
 | Format, file size, complexity and clang-tidy (`ci.yml`, `lint`) | `make versions format-check filesize complexity tidy` | Version files agree, clang-format 18, 500 lines per file, the AGENTS.md complexity ceilings, clang-tidy |
-| Build and unit tests, GCC and Clang with ASan and UBSan (`ci.yml`, `build`) | `make test`; with sanitizers `make test CMAKE_ARGS="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'"` | `-Wall -Wextra -Wpedantic -Werror`, ctest |
+| Build and unit tests, GCC and Clang, with ASan and UBSan and with the hardening flags of [docs/ASSURANCE.md](docs/ASSURANCE.md#compiler-hardening) (`ci.yml`, `build`) | `make test`; with sanitizers `make test CMAKE_ARGS="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'"` | `-Wall -Wextra -Wpedantic -Werror`, ctest |
 | ThreadSanitizer (`ci.yml`, `tsan`) | `make tsan` (clang) | `AsyncClient` shared across threads and destroyed with calls in flight, the multi transport, both clients |
 | Installed CMake package (`ci.yml`, `package`) | `make package-test` | `cmake --install`, then `find_package(crypto_service_sdk CONFIG)` from `tests/package/` |
 | Coverage (`ci.yml`, `coverage`) | `make coverage` (clang: `CC=clang CXX=clang++`) | 100% of lines and branch outcomes in `include/` and `src/` |

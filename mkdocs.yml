@@ -62,6 +62,10 @@ nav:
   - Benchmarks: BENCHMARKS.md
   - Policies: POLICIES.md
   - Packaging: packaging.md
+  - Reproducing a release: REPRODUCING.md
+  - Security:
+      - Assurance case: ASSURANCE.md
+      - Security review 2026-11: security-review-2026-11.md
   - Roadmap: ROADMAP.md
   - Decision records:
       - adr/README.md

@@ -27,6 +27,9 @@ cmake --build build
 cmake --install build --prefix /opt/crypto-service
 ```
 
+The archive and the SBOM can be rebuilt from the signed tag and
+compared with `SHA256SUMS` ([reproducing a release](REPRODUCING.md)).
+
 Then, in the consuming project:
 
 ```cmake
@@ -54,6 +57,11 @@ The version file accepts the exact version only (`ExactVersion`): every
   against a SHA-256 in `CMakeLists.txt`; GoogleTest 1.18.0 (tests) and
   Google Benchmark 1.10.0 (benchmarks, off by default) the same way.
   There is no option yet to use a system nlohmann/json.
+- **Hardening flags.** The CMake files set warnings only; your
+  toolchain's hardening flags apply. CI builds and tests the library
+  with `_FORTIFY_SOURCE=3`, `_GLIBCXX_ASSERTIONS`, stack protector,
+  stack-clash and CET protection, and full RELRO on GCC and Clang
+  ([compiler hardening](ASSURANCE.md#compiler-hardening)).
 - **Offline builds.** Point FetchContent at unpacked sources and forbid
   downloads:
   `-DFETCHCONTENT_FULLY_DISCONNECTED=ON -DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<dir>`

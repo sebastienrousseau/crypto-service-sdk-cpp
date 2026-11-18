@@ -35,6 +35,13 @@ acknowledgement.
 
 ## Security posture
 
+The [assurance case](docs/ASSURANCE.md) sets out the assets, actors,
+entry points and trust boundaries, how secure design principles are
+applied, and how common weaknesses are countered, each with the code
+and test behind it. The latest security review is
+[November 2026](docs/security-review-2026-11.md). This section is the
+summary.
+
 ### Scope
 
 The SDK is an HTTP client. It builds JSON requests, sends them with
@@ -51,7 +58,7 @@ signature, KEM and KDF runs in crypto-server. It does not write files.
 | **Protocol and redirect abuse** | libcurl is limited to `http` and `https` and never follows a redirect; a 3xx is an error. |
 | **TLS** | Peer and host-name verification are always on; there is no option to turn them off. |
 | **Credentials in URLs** | A `base_url` with user information, a query or a fragment is rejected. |
-| **Plain-text transport** | `http://` is accepted for loopback development; use `https://` elsewhere, as API keys, tokens, keys and plaintexts travel in the requests. |
+| **Plain-text transport** | `http://` is accepted for any host, for loopback development and private networks; nothing stops credentials from travelling in clear text to a remote `http://` URL, so use `https://` for anything else, as API keys, tokens, keys and plaintexts travel in the requests. |
 | **Duplicated side effects** | Stateful operations (key generation and deletion, every keygen, KMS key creation, OPAQUE registration) are never retried after a 504 or a lost connection, when the server may already have acted. |
 | **Malformed responses** | A 2xx body that is not JSON or lacks a required member raises `TransportError`; a non-2xx body that is not a problem becomes an `about:blank` problem. Both parsers are fuzzed. |
 | **Dependency CVEs** | libcurl comes from the system; nlohmann/json, GoogleTest and Google Benchmark are fetched from release archives pinned by SHA-256. |

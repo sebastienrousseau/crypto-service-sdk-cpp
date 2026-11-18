@@ -102,6 +102,17 @@ jobs:
           python3 scripts/sbom.py "$VERSION" > "dist/crypto-service-sdk-cpp-$VERSION.cdx.json"
           (cd dist && sha256sum -- * > SHA256SUMS && cat SHA256SUMS)
 
+      # docs/REPRODUCING.md: the same commands give the same bytes.
+      - name: A second build matches the first
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p again
+          git archive --format=tar.gz --prefix="crypto-service-sdk-cpp-$VERSION/" \
+            -o "again/crypto-service-sdk-cpp-$VERSION.tar.gz" HEAD
+          python3 scripts/sbom.py "$VERSION" > "again/crypto-service-sdk-cpp-$VERSION.cdx.json"
+          (cd again && sha256sum --check ../dist/SHA256SUMS)
+
       - name: Attest build provenance
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:

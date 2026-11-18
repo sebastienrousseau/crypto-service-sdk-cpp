@@ -51,6 +51,9 @@ jobs:
       - name: Version files agree
         run: make versions
 
+      - name: The release SBOM is reproducible (docs/REPRODUCING.md)
+        run: cmp <(python3 scripts/sbom.py 0.0.0) <(python3 scripts/sbom.py 0.0.0)
+
       - name: Shell scripts (shellcheck)
         run: shellcheck scripts/*.sh scripts/verify-release-versions
 

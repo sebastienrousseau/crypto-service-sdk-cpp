@@ -18,15 +18,18 @@ recorded in [ADR 0006](adr/0006-cmake-package-github-release-no-registry.md).
 ## Consuming a release
 
 ```sh
-curl -LO https://github.com/sebastienrousseau/crypto-service-sdk-cpp/releases/download/v0.0.40/crypto-service-sdk-cpp-0.0.40.tar.gz
-curl -LO https://github.com/sebastienrousseau/crypto-service-sdk-cpp/releases/download/v0.0.40/SHA256SUMS
+curl -LO https://github.com/sebastienrousseau/crypto-service-sdk-cpp/releases/download/v0.0.41/crypto-service-sdk-cpp-0.0.41.tar.gz
+curl -LO https://github.com/sebastienrousseau/crypto-service-sdk-cpp/releases/download/v0.0.41/SHA256SUMS
 sha256sum --check --ignore-missing SHA256SUMS
-gh attestation verify crypto-service-sdk-cpp-0.0.40.tar.gz --repo sebastienrousseau/crypto-service-sdk-cpp
-tar xzf crypto-service-sdk-cpp-0.0.40.tar.gz
-cmake -S crypto-service-sdk-cpp-0.0.40 -B build -DCMAKE_BUILD_TYPE=Release
+gh attestation verify crypto-service-sdk-cpp-0.0.41.tar.gz --repo sebastienrousseau/crypto-service-sdk-cpp
+tar xzf crypto-service-sdk-cpp-0.0.41.tar.gz
+cmake -S crypto-service-sdk-cpp-0.0.41 -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 cmake --install build --prefix /opt/crypto-service
 ```
+
+The commands name the version `main` prepares; until it is released,
+use the newest release (`0.0.40`).
 
 The archive and the SBOM can be rebuilt from the signed tag and
 compared with `SHA256SUMS` ([reproducing a release](REPRODUCING.md)).
@@ -34,7 +37,7 @@ compared with `SHA256SUMS` ([reproducing a release](REPRODUCING.md)).
 Then, in the consuming project:
 
 ```cmake
-find_package(crypto_service_sdk 0.0.40 CONFIG REQUIRED)  # CMAKE_PREFIX_PATH=/opt/crypto-service
+find_package(crypto_service_sdk 0.0.41 CONFIG REQUIRED)  # CMAKE_PREFIX_PATH=/opt/crypto-service
 target_link_libraries(your_app PRIVATE crypto_service::sdk)
 ```
 

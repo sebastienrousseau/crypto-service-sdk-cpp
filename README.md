@@ -67,11 +67,14 @@ include(FetchContent)
 FetchContent_Declare(
   crypto_service_sdk
   GIT_REPOSITORY https://github.com/sebastienrousseau/crypto-service-sdk-cpp.git
-  GIT_TAG        v0.0.40)
+  GIT_TAG        v0.0.41)
 FetchContent_MakeAvailable(crypto_service_sdk)
 
 target_link_libraries(your_app PRIVATE crypto_service::sdk)
 ```
+
+The snippets name the version `main` prepares; until its tag exists,
+use the newest release (`v0.0.40`).
 
 **`add_subdirectory`** on a checkout works the same way. Tests, examples
 and install rules are only generated when the SDK is the top-level
@@ -87,7 +90,7 @@ cmake --install build --prefix /opt/crypto-service
 ```
 
 ```cmake
-find_package(crypto_service_sdk 0.0.40 CONFIG REQUIRED)  # with CMAKE_PREFIX_PATH=/opt/crypto-service
+find_package(crypto_service_sdk 0.0.41 CONFIG REQUIRED)  # with CMAKE_PREFIX_PATH=/opt/crypto-service
 target_link_libraries(your_app PRIVATE crypto_service::sdk)
 ```
 
@@ -326,7 +329,7 @@ credentials redacted. Bad options throw `std::invalid_argument`.
 The tests and examples read `CRYPTO_SERVICE_URL` and
 `CRYPTO_SERVICE_API_KEY`; the library itself reads no environment
 variables. Every request carries
-`User-Agent: crypto-service-sdk-cpp/0.0.40`.
+`User-Agent: crypto-service-sdk-cpp/0.0.41`.
 
 ---
 

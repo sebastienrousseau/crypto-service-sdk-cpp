@@ -58,18 +58,26 @@ signature, KEM and KDF runs in crypto-server. It does not write files.
 
 ### Dependency audit
 
-The SDK has one run-time dependency besides libcurl, and no automated
-advisory scan covers them, because none comes from a package registry
-that an audit tool reads:
+The SDK has one run-time dependency besides libcurl. None of them comes
+from a package registry that Dependabot or a registry audit tool reads,
+so the archives pinned in the CMake files are checked against
+[OSV](https://osv.dev) instead: `scripts/osv-check.py` asks OSV about
+each pinned release tag (the `GIT` ecosystem) and fails on any known
+vulnerability. The [OSV workflow](.github/workflows/osv.yml) runs it on
+every push and pull request and every Monday, so a new advisory against
+an unchanged pin is noticed within a week.
 
 | Dependency | How it is obtained | How advisories are tracked |
 | :--- | :--- | :--- |
 | libcurl 7.85 or newer | The system package (`libcurl4-openssl-dev` in CI) | The operating system's security updates; CI installs the current Ubuntu 24.04 package on every run. |
-| nlohmann/json `3.12.0` | Release archive, `URL_HASH SHA256` in `CMakeLists.txt` | By hand: its GitHub security advisories are reviewed before a release or a pin bump. |
-| GoogleTest `1.18.0` (tests only) | Release archive, `URL_HASH SHA256` in `tests/CMakeLists.txt` | By hand, as above; it is never linked into the library. |
-| Google Benchmark `1.10.0` (benchmarks only, off by default) | Release archive, `URL_HASH SHA256` in `benchmarks/CMakeLists.txt` | By hand, as above; it is never linked into the library. |
+| nlohmann/json `3.12.0` | Release archive, `URL_HASH SHA256` in `CMakeLists.txt` | `scripts/osv-check.py` in CI, weekly and on every change; its GitHub security advisories are also read before a pin bump. |
+| GoogleTest `1.18.0` (tests only) | Release archive, `URL_HASH SHA256` in `tests/CMakeLists.txt` | As above; it is never linked into the library. |
+| Google Benchmark `1.10.0` (benchmarks only, off by default) | Release archive, `URL_HASH SHA256` in `benchmarks/CMakeLists.txt` | As above; it is never linked into the library. |
 
-Dependabot has no CMake `FetchContent` ecosystem, so it cannot propose
-updates for the archives; it does track the workflow actions. A changed
-upstream archive fails the CMake configure step on its SHA-256 instead
-of building.
+The check queries a libcurl release with published CVEs first and fails
+if OSV returns none for it, so an API change cannot turn every answer
+into a silent pass. Dependabot has no CMake `FetchContent` ecosystem, so
+it cannot propose updates for the archives; it does track the workflow
+actions and the manual's Python requirements. A changed upstream
+archive fails the CMake configure step on its SHA-256 instead of
+building.

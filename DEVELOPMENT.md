@@ -42,6 +42,7 @@ install.
 | libFuzzer (`fuzz.yml`) | `make fuzz CXX=clang++ FUZZ_SECONDS=60` (not Apple clang) | Success-response decoding and problem parsing under ASan and UBSan |
 | Markdown, spelling, licences, README shape, links (`docs-lint.yml`) | `npx markdownlint-cli2 "**/*.md"`, `codespell`, `reuse lint`, `scripts/readme-check.sh`, `lychee --offline '**/*.md'` | Style, typos, SPDX on every file, the README template, intra-repo links |
 | Manual (`manual.yml`) | `make docs` | Doxygen with warnings as errors, then `mkdocs build --strict` |
+| Known vulnerabilities in the pinned archives (`osv.yml`, also weekly) | `python3 scripts/osv-check.py` | OSV has no advisory for the nlohmann/json, GoogleTest or Google Benchmark release a CMake file pins |
 | CodeQL (`codeql.yml`), Scorecard (`scorecard.yml`), DCO (`dco.yml`) | none | Static analysis, supply-chain score, `Signed-off-by` on every commit |
 
 `make check` runs the cheap local gate: versions, format, file size,

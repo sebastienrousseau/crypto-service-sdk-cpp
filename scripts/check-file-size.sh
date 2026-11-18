@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Fails when a C++ source or header is longer than 500 lines, the
 # per-file ceiling from the suite's complexity rules. clang-tidy covers

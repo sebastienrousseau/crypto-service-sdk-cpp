@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Every operation of the crypto-server v2 API, once, for both clients:
 // Client returns each result (Ret<T> = T), AsyncClient returns a

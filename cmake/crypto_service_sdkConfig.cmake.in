@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Package config for find_package(crypto_service_sdk CONFIG): defines
 # the imported target crypto_service::sdk and finds what it links

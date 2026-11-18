@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The byte type and the two text encodings the API uses for binary
 // values: lowercase hex (keys, signatures, digests, shared secrets) and

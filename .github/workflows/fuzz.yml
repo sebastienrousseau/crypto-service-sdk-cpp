@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # libFuzzer on the response decoders and error mapping (fuzz/), with
 # ASan and UBSan, for a bounded time per target. A finding fails the job

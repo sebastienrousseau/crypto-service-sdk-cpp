@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Exponential backoff with full jitter, Retry-After, and the
 // stateful-route rule: a request that may have created or deleted

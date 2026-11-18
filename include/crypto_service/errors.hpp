@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The error model: every exception the SDK throws derives from Error.
 // ApiError carries the server's RFC 9457 problem; TransportError means

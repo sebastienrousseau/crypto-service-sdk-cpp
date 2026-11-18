@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The client's own cost, no network: encode_request (a typed request
 // to its JSON body), decode_response (a 200 body to its typed result)

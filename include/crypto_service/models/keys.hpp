@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Server-held keys and classical signatures: generation, export,
 // deletion, Ed25519 signing and verification, batch signing and the

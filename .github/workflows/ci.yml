@@ -1,8 +1,10 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Lint (version files, clang-format, file size, the complexity ceilings
 # measured by rust-code-analysis, and clang-tidy), build and unit tests
-# on GCC and Clang (each also with ASan and UBSan), ThreadSanitizer,
+# on GCC and Clang (each also with ASan and UBSan, and with the compiler
+# hardening flags docs/ASSURANCE.md recommends), ThreadSanitizer,
 # 100% line and branch coverage, the installed CMake package, the
 # conformance kit against a live crypto-server built at ci/server.ref,
 # and the API compatibility check against the last tag.
@@ -51,8 +53,11 @@ jobs:
       - name: Version files agree
         run: make versions
 
+      - name: The release SBOM is reproducible (docs/REPRODUCING.md)
+        run: cmp <(python3 scripts/sbom.py 0.0.0) <(python3 scripts/sbom.py 0.0.0)
+
       - name: Shell scripts (shellcheck)
-        run: shellcheck scripts/*.sh scripts/verify-release-versions
+        run: shellcheck scripts/*.sh scripts/verify-release-versions scripts/verify-release-tag
 
       - name: Format and file size
         run: make format-check filesize CLANG_FORMAT=clang-format-18
@@ -98,6 +103,18 @@ jobs:
             cc: clang-18
             cxx: clang++-18
             flags: "-fsanitize=address,undefined -fno-sanitize-recover=undefined"
+          # The flags docs/ASSURANCE.md recommends to consumers: they
+          # build warning-free and the tests pass with them.
+          - name: gcc-hardened
+            cc: gcc
+            cxx: g++
+            flags: "-O2 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS -fstack-protector-strong -fstack-clash-protection -fcf-protection"
+            ldflags: "-Wl,-z,relro,-z,now"
+          - name: clang-hardened
+            cc: clang-18
+            cxx: clang++-18
+            flags: "-O2 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS -fstack-protector-strong -fstack-clash-protection -fcf-protection"
+            ldflags: "-Wl,-z,relro,-z,now"
     env:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
@@ -114,8 +131,9 @@ jobs:
       - name: Build with warnings as errors, run the tests
         env:
           FLAGS: ${{ matrix.flags }}
+          LINK_FLAGS: ${{ matrix.ldflags || matrix.flags }}
         run: |
-          make test CMAKE_ARGS="-DCMAKE_CXX_FLAGS='$FLAGS' -DCMAKE_EXE_LINKER_FLAGS='$FLAGS'"
+          make test CMAKE_ARGS="-DCMAKE_CXX_FLAGS='$FLAGS' -DCMAKE_EXE_LINKER_FLAGS='$LINK_FLAGS'"
 
       - name: The examples were built
         run: for name in hash aead sign_verify ml_kem errors async_concurrent; do test -x "build/crypto_service_$name"; done
@@ -356,7 +374,9 @@ jobs:
 
       - name: Source compatibility with the last tag (the gate)
         if: steps.baseline.outputs.tag != ''
-        run: scripts/api-check.sh "${{ steps.baseline.outputs.tag }}"
+        env:
+          BASELINE: ${{ steps.baseline.outputs.tag }}
+        run: scripts/api-check.sh "$BASELINE"
 
       # No tag yet: exercise the same check against main so the tooling is
       # known to work before it gates; its result does not fail the job.

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // detail::encode and detail::decode for every request and result
 // struct, explicitly instantiated so the public templates link against

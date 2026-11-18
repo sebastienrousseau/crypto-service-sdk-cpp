@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Google Benchmark targets, built only with
 # CRYPTO_SERVICE_SDK_BUILD_BENCHMARKS=ON (`make bench`). The scenario

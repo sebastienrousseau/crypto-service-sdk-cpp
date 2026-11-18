@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # The complexity ceilings from ~/Code/AGENTS.md section 0, per function:
 # cognitive 15 (readability-function-cognitive-complexity), at most 60

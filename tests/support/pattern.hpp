@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The subset of ECMAScript regular expressions the conformance kit's
 // `$shape` patterns use: anchored (`^`, optional `$`), literals and

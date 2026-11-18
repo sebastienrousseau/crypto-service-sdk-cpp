@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Every request and result struct, with every member set (optionals
 // present, arrays with one element), encoded and decoded back: each

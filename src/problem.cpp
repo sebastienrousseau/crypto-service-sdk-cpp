@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The error types, and the RFC 9457 problem of a non-2xx response: the
 // server's problem body when it is one, else an `about:blank` problem

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // One libcurl transfer's setup and outcome, for both transports. The
 // security options are set on every transfer and have no off switch:

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Extracts every ```cpp block of README.md, compiles each as its own
 # program against the SDK built in <build-dir>, and runs it against the

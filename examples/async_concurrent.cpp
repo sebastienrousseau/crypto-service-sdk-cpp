@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Concurrent calls with the AsyncClient: queue several requests at
 // once, then wait for the futures. One event-loop thread and one

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Error handling: the server's RFC 9457 problem details (ApiError) for
 // an unknown key and for a request that fails validation, and a

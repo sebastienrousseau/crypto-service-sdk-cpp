@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Internal: the wire schema of the KMS, OPAQUE and service structs (see
 // schemas_core.hpp).

@@ -1,4 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 OR MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Sebastien Rousseau -->
 
 # 0006. Ship a CMake package and a GitHub release; no package registry
 

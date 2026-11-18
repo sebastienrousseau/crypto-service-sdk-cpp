@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # API breakage check against a baseline (the last release tag in CI):
 # builds the library at the baseline and at the working tree as shared

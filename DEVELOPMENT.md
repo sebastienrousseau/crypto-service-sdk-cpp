@@ -1,4 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 OR MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Sebastien Rousseau -->
 
 # Development
 
@@ -33,7 +34,7 @@ install.
 | CI job (workflow) | Local command | What it checks |
 | :--- | :--- | :--- |
 | Format, file size, complexity and clang-tidy (`ci.yml`, `lint`) | `make versions format-check filesize complexity tidy` | Version files agree, clang-format 18, 500 lines per file, the AGENTS.md complexity ceilings, clang-tidy |
-| Build and unit tests, GCC and Clang with ASan and UBSan (`ci.yml`, `build`) | `make test`; with sanitizers `make test CMAKE_ARGS="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'"` | `-Wall -Wextra -Wpedantic -Werror`, ctest |
+| Build and unit tests, GCC and Clang, with ASan and UBSan and with the hardening flags of [docs/ASSURANCE.md](docs/ASSURANCE.md#compiler-hardening) (`ci.yml`, `build`) | `make test`; with sanitizers `make test CMAKE_ARGS="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'"` | `-Wall -Wextra -Wpedantic -Werror`, ctest |
 | ThreadSanitizer (`ci.yml`, `tsan`) | `make tsan` (clang) | `AsyncClient` shared across threads and destroyed with calls in flight, the multi transport, both clients |
 | Installed CMake package (`ci.yml`, `package`) | `make package-test` | `cmake --install`, then `find_package(crypto_service_sdk CONFIG)` from `tests/package/` |
 | Coverage (`ci.yml`, `coverage`) | `make coverage` (clang: `CC=clang CXX=clang++`) | 100% of lines and branch outcomes in `include/` and `src/` |
@@ -42,6 +43,7 @@ install.
 | libFuzzer (`fuzz.yml`) | `make fuzz CXX=clang++ FUZZ_SECONDS=60` (not Apple clang) | Success-response decoding and problem parsing under ASan and UBSan |
 | Markdown, spelling, licences, README shape, links (`docs-lint.yml`) | `npx markdownlint-cli2 "**/*.md"`, `codespell`, `reuse lint`, `scripts/readme-check.sh`, `lychee --offline '**/*.md'` | Style, typos, SPDX on every file, the README template, intra-repo links |
 | Manual (`manual.yml`) | `make docs` | Doxygen with warnings as errors, then `mkdocs build --strict` |
+| Known vulnerabilities in the pinned archives (`osv.yml`, also weekly) | `python3 scripts/osv-check.py` | OSV has no advisory for the nlohmann/json, GoogleTest or Google Benchmark release a CMake file pins |
 | CodeQL (`codeql.yml`), Scorecard (`scorecard.yml`), DCO (`dco.yml`) | none | Static analysis, supply-chain score, `Signed-off-by` on every commit |
 
 `make check` runs the cheap local gate: versions, format, file size,
@@ -139,13 +141,18 @@ the only one open against `main`.
    is `crypto-service-sdk-cpp v<version>`:
    `git tag -s v0.0.40 -m "crypto-service-sdk-cpp v0.0.40" && git push origin v0.0.40`.
 4. **Release**: the tag triggers `release.yml`. It checks the tag
-   message and the version files, runs the tests and the package test,
+   (`scripts/verify-release-tag`: annotated, signed by a key in
+   `KEYS.asc`, with the release message, and the commit being built)
+   and the version files, runs the tests and the package test,
    builds `crypto-service-sdk-cpp-<version>.tar.gz` (`git archive`), the
    CycloneDX SBOM (`scripts/sbom.py`, from the CMake pins) and
-   `SHA256SUMS`, attests their provenance, and creates the release
+   `SHA256SUMS`, builds the archive and SBOM a second time and checks
+   them against `SHA256SUMS` ([reproducing a release](docs/REPRODUCING.md)),
+   attests their provenance, and creates the release
    titled `crypto-service-sdk-cpp <version>` with notes from
    `scripts/release-notes.sh`. The publish job runs in the `release`
-   environment. Re-running it updates the release in place.
+   environment. Re-running it updates the release in place; a
+   `workflow_dispatch` with `dry_run` off must be run on the tag itself.
 5. **Audit**: the workflow checks the live title and notes; then
    confirm with `gh release view v<version> --json name,body`.
 

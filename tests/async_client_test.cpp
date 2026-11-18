@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // AsyncClient's event loop on a fake transport: concurrent callers,
 // retries on timers, the deadline, cancellation, a transport that
@@ -234,9 +235,11 @@ TEST(AsyncClient, ResultAfterCancelIsDropped) {
   EXPECT_EQ(state->cancelled.size(), 1U);
 }
 
+// Retry-After fixes the wait at 10 s: a jittered backoff is uniform in
+// [0, max_delay] and sometimes ended before the cancel at 20 ms.
 TEST(AsyncClient, CancelTokenEndsAWaitingRetry) {
   auto state = std::make_shared<FakeState>();
-  state->push(kit::reply(503, ""));
+  state->push(kit::reply(503, "", {{"Retry-After", "10"}}));
   ClientOptions options = retrying(1);
   options.retry.initial_delay = options.retry.max_delay = milliseconds(10000);
   auto client = make(state, options);

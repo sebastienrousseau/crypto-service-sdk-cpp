@@ -1,4 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 OR MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Sebastien Rousseau -->
 
 # 0004. Async model: futures from one owned event-loop thread, and the retry table
 

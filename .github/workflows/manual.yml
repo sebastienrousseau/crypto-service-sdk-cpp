@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # The user manual: Doxygen renders the public headers into docs/api/ with
 # warnings as errors (an undocumented member fails), then MkDocs Material

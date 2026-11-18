@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Runs a standalone fuzz target once per file in a corpus directory, the
 # file on standard input, and fails on the first non-zero exit.

@@ -1,0 +1,28 @@
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
+#
+# Fails unless TAG is an annotated tag whose subject is the release
+# message, whose SSH signature verifies against KEYS.asc, and which
+# points at the commit checked out (HEAD), so the files built from HEAD
+# are the tag's. Run by release.yml before anything is published.
+# Usage: scripts/verify-release-tag v<version>
+set -eu
+cd "$(dirname "$0")/.."
+
+tag=${1:?usage: scripts/verify-release-tag v<version>}
+git fetch --quiet --force origin "refs/tags/$tag:refs/tags/$tag"
+if [ "$(git cat-file -t "$tag")" != tag ]; then
+  echo "verify-release-tag: $tag is not an annotated tag" >&2
+  exit 1
+fi
+if [ "$(git rev-parse "$tag^{commit}")" != "$(git rev-parse HEAD)" ]; then
+  echo "verify-release-tag: $tag is not the commit being built (HEAD)" >&2
+  exit 1
+fi
+subject=$(git tag -l --format='%(contents:subject)' "$tag")
+if [ "$subject" != "crypto-service-sdk-cpp $tag" ]; then
+  echo "verify-release-tag: $tag's message is '$subject'" >&2
+  exit 1
+fi
+git -c gpg.ssh.allowedSignersFile=KEYS.asc verify-tag "$tag"

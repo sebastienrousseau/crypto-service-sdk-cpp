@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # `make check` is the gate: version files, format, file size, the
 # complexity ceilings, build with warnings as errors, tests (the

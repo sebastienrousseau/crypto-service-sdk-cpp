@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Requests and results of the symmetric routes: AEAD, secretbox,
 // password encryption and AES key wrap. Binary fields are Bytes; the

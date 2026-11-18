@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // XChaCha20-Poly1305 round trip: encrypt a text under a 256-bit key,
 // then decrypt the ciphertext. The key here is a synthetic test value;

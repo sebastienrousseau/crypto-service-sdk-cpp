@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // The HTTP seam. Client sends through a Transport (blocking, one request
 // at a time); AsyncClient drives an AsyncTransport from its event-loop

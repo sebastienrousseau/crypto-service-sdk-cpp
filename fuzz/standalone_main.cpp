@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Replays one input, read from standard input, through
 // LLVMFuzzerTestOneInput where libFuzzer is not available (GCC, Apple

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Internal to the SDK, public only because the client templates use it:
 // a route's method, path and shape, and the JSON encoders and decoders

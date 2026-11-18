@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // libFuzzer target: any status and body, so mostly error replies. The
 // first three bytes are the status as decimal digits (each byte taken

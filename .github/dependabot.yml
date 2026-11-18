@@ -1,9 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 #
 # Dependabot has no CMake FetchContent ecosystem, so the nlohmann/json,
-# GoogleTest and Google Benchmark pins in the CMake files are reviewed
-# by hand. It does track the workflow actions and the hash-pinned
-# MkDocs requirements the manual builds with.
+# GoogleTest and Google Benchmark pins in the CMake files are checked
+# against OSV by scripts/osv-check.py (.github/workflows/osv.yml) and
+# bumped by hand. It does track the workflow actions and the
+# hash-pinned MkDocs requirements the manual builds with.
 version: 2
 updates:
   - package-ecosystem: "github-actions"

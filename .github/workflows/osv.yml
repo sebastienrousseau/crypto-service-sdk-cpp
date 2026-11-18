@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+# SPDX-FileCopyrightText: 2026 Sebastien Rousseau
+#
+# Known vulnerabilities in the pinned FetchContent archives
+# (nlohmann/json, GoogleTest, Google Benchmark): scripts/osv-check.py asks
+# OSV about each pinned release tag and fails on any advisory. Dependabot
+# cannot see these pins, so this runs on every push and pull request and
+# weekly, when a new advisory may name an unchanged pin. Locally:
+# `python3 scripts/osv-check.py`.
+name: OSV
+
+on:
+  push:
+    branches: [main, "feat/*"]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 4 * * 1" # weekly, Monday 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: osv-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  osv:
+    name: OSV advisories for the pinned archives
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Query OSV for every pin
+        run: python3 scripts/osv-check.py

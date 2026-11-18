@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// SPDX-FileCopyrightText: 2026 Sebastien Rousseau
 //
 // Internal: the retry decisions, ported from the TypeScript SDK's
 // request.ts so every SDK retries the same requests the same way.
